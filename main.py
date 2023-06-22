@@ -50,33 +50,30 @@ def parse_doc(id):
     return render_template('parse_doc.html', doc=doc, parsed=parsed)
 
 def read_docx(data):
-    # document = Document(data)
-    document = Document(io.BytesIO(data)).getvalue().split()
-    table = document.tables[0]
-    for row in table.rows:
-        for cell in row.cells:
-            print(cell.text)
+    # document = Document(io.BytesIO(data))
+    # table = document.tables[0]
+    # for row in table.rows:
+    #     for cell in row.cells:
+    #         print(cell.text)
     # docText = b'\n\n'.join(
     #     paragraph.text for paragraph in document.paragraphs
     # )
     # docText.read()
     # docText = '\n\n'.join([paragraph.text.encode('utf-8') for paragraph in document.paragraphs])
-    # b = io.BytesIO(doc.data).getvalue().split()
+    b = io.BytesIO(data)
     # b = io.BytesIO(data).getvalue().split()
     # result = str(b).encode('ascii')
-    # for item in b:
-    #     print('item------------------------')
-    #     print(item.decode('iso-8859-1'))
+    for item in b:
+        print('item------------------------')
+        print(item.decode('iso-8859-1'))
     # print(result)
     # print("b --------------------------------------")
-    # print(b)
+    print(b)
     # fileobj = open(result)
     # fo = open(result, "w+")
     # print ("Name of file: ", fo.name)
     # print ("Opening mode: ", fo.mode)
     # wo = fo.write("filename")
-
-read_docx
 
 if __name__ == '__main__':
     app.run(debug=True)
