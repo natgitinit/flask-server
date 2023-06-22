@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-from pprint import pprint
 from docx import Document
 import io
-
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -11,7 +9,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/natgit/Documents/Code/
 db.init_app(app)
 
 # from app import db, Upload
-
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(50))
@@ -43,22 +40,43 @@ def list():
 
 @app.route('/parse_doc/<id>', methods=['GET'])
 def parse_doc(id):
+    print("id --------------------------------------")
     print("id", id)
     doc = Upload.query.filter_by(id=id).first_or_404()
+    print("doc --------------------------------------")
     print("doc", doc.filename)
-    parsed = read_docx(doc)
+    parsed = read_docx(doc.data)
+    print(parsed)
     return render_template('parse_doc.html', doc=doc, parsed=parsed)
 
-def read_docx(doc):
-    b = io.BytesIO(doc.data).getvalue()
-    # b.getvalue()
-    # result = b.decode('UTF-8')
-    result = str(b)
-    return result
-    # return "\n".join(result)
+def read_docx(data):
+    # document = Document(data)
+    document = Document(io.BytesIO(data)).getvalue().split()
+    table = document.tables[0]
+    for row in table.rows:
+        for cell in row.cells:
+            print(cell.text)
+    # docText = b'\n\n'.join(
+    #     paragraph.text for paragraph in document.paragraphs
+    # )
+    # docText.read()
+    # docText = '\n\n'.join([paragraph.text.encode('utf-8') for paragraph in document.paragraphs])
+    # b = io.BytesIO(doc.data).getvalue().split()
+    # b = io.BytesIO(data).getvalue().split()
+    # result = str(b).encode('ascii')
+    # for item in b:
+    #     print('item------------------------')
+    #     print(item.decode('iso-8859-1'))
+    # print(result)
+    # print("b --------------------------------------")
+    # print(b)
+    # fileobj = open(result)
+    # fo = open(result, "w+")
+    # print ("Name of file: ", fo.name)
+    # print ("Opening mode: ", fo.mode)
+    # wo = fo.write("filename")
 
 read_docx
 
 if __name__ == '__main__':
-    pprint('after db.create_all()')
-    app.run(debug=False)
+    app.run(debug=True)
