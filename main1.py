@@ -89,8 +89,6 @@ def extract_invoice_to(soup):
             print(span_tag.string)
         if (invoice_line is not None and i > invoice_line and span_tag.string != None and invoice_end != None):
             invoice_details.append(span_tag.string)
-            print('Details: ----------------------------------')
-            print(invoice_details)
         if (invoice_line is not None and i > invoice_line and span_tag.string == None):
             invoice_end = i
     print('Invoice Details: ----------------------------------')
