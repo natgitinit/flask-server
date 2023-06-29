@@ -72,7 +72,10 @@ def read_docx(data):
         for link in soup.find_all('span'):
             print('For each STRING!: -------------------------')
             print(link.string)
-        extract_invoice_to(soup)
+        account = None
+        account = extract_invoice_to(soup)
+        # parent_company = None
+        # parent_company = extract_parent_company(soup)
 # account
 # parent_company
 # customer_worksite
@@ -104,6 +107,7 @@ def extract_invoice_to(soup):
             invoice_end = i
     print('Invoice Details: ----------------------------------')
     print(invoice_details)
+    return invoice_details
 
 @app.route('/api/data')
 def get_data():
