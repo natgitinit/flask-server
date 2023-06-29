@@ -4,6 +4,7 @@ from docx import Document
 import io
 from flask_cors import CORS
 from bs4 import BeautifulSoup
+import re
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -83,15 +84,23 @@ def extract_invoice_to(soup):
     invoice_details = []
     invoice_end = None
     for i, span_tag in enumerate(soup.find_all('span')):
-        if span_tag.string == "Invoice To:":
+        print("i----------------", i)
+        print("SPAN TAG-------------------", span_tag.string)
+        x = None
+        if span_tag.string is not None:
+            x = re.search("Invoice To:", span_tag.string)
+        if x is not None:
+            print("THIS IS THE RIGHT SPAN TAG-----------------", x)
             invoice_line = i
-            print(i)
+            print("MATCH***************", x)
             print(span_tag.string)
-        if (invoice_line is not None and i > invoice_line and span_tag.string != None and invoice_end != None):
-            invoice_details.append(span_tag.string)
+        print("Invoice Line************************", invoice_line)
+        print("Invoice End************************", invoice_end)
+        if (invoice_line is not None and i > invoice_line and span_tag.string is not None and invoice_end is None):
             print('Details: ----------------------------------')
+            invoice_details.append(span_tag.string)
             print(invoice_details)
-        if (invoice_line is not None and i > invoice_line and span_tag.string == None):
+        if (invoice_line is not None and i > invoice_line and span_tag.string == None and invoice_end is None):
             invoice_end = i
     print('Invoice Details: ----------------------------------')
     print(invoice_details)
